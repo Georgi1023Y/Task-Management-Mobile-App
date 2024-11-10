@@ -7,18 +7,11 @@ import { Icon } from '@iconify/react';
 export default function Index() {
   const [lightMode, setLightMode] = React.useState(false);
   const [text, setText] = React.useState('');
+  const [onEditMode, setOnEditMode] = React.useState(false);
   const [myTasks, setMyTasks] = React.useState([
     {
       id: '1',
       title: 'Трябва да програмирам',
-    },
-    {
-      id: '2',
-      title: 'Трябва да уча',
-    },
-    {
-      id: '3',
-      title: 'Трябва да се подстрижа',
     },
   ]);
 
@@ -30,6 +23,11 @@ export default function Index() {
       setText('');
     }
    }
+
+  //  Функция за влизане в Edit mode
+  const myEditMode = () => {
+    setOnEditMode(!onEditMode);
+  }
 
   //  Функция за едитване на задача
   const editTask = () => {
@@ -47,7 +45,7 @@ export default function Index() {
         </Text>
         {/* Edit and Delete Icons */}
         <View className="flex flex-row gap-4">
-          <Pressable onPress={editTask}>
+          <Pressable onPress={() => myEditMode()}>
             <Icon icon="ic:round-edit"  className={`${lightMode ? 'text-black' : 'text-white'} w-[18px] h-[18px]`}/>
           </Pressable>
           <Pressable>
@@ -55,6 +53,27 @@ export default function Index() {
           </Pressable>  
         </View>
       </View>  
+      {/* This shows only if edit mode is turned on */}
+      {
+        onEditMode ? (
+          <View className="gap-4 flex items-start justify-start">
+            <TextInput
+              placeholder="Промени задачата"
+              className={`text-xs w-full h-[40px] rounded-md ${lightMode ? 'text-black': 'text-white'} pl-4 ${lightMode ? 'bg-lightDiv' : 'bg-darkDiv'}`}
+            />
+            <View className="flex items-center justify-center">
+             <Pressable className={`flex items-center justify-center w-[140px] py-3.5 rounded-3xl ${lightMode ? 'bg-black' : 'bg-lightDiv'}`}>
+               <Text className={`${lightMode ? 'text-white' : 'text-black'} font-semibold text-xs`}>Промени задачата</Text>
+             </Pressable>
+            </View>
+          </View>
+        ) : (
+            <>
+            
+            </>
+        )
+      }
+      
     </View>
   );
 
@@ -114,7 +133,7 @@ export default function Index() {
         <SafeAreaView>
           <FlatList
             data={myTasks}
-            renderItem={({item}) => <Item title={item.title} />}
+            renderItem={({item}) => <Item title={item.title}/>}
             keyExtractor={item => item.id}
           />
         </SafeAreaView>
